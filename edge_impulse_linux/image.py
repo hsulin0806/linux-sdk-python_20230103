@@ -5,7 +5,11 @@ import cv2
 from edge_impulse_linux.runner import ImpulseRunner
 import math
 import psutil
-
+#ccc = cv2.VideoCapture(videoDeviceId)
+#suc, img_test = ccc.read()
+#img_test =img_test
+import time
+import os
 class ImageImpulseRunner(ImpulseRunner):
     def __init__(self, model_path: str):
         super(ImageImpulseRunner, self).__init__(model_path)
@@ -19,7 +23,7 @@ class ImageImpulseRunner(ImpulseRunner):
         model_info = super(ImageImpulseRunner, self).init()
         width = model_info['model_parameters']['image_input_width'];
         height = model_info['model_parameters']['image_input_height'];
-
+        
         if width == 0 or height == 0:
             raise Exception('Model file "' + self._model_path + '" is not suitable for image recognition')
 
@@ -60,19 +64,44 @@ class ImageImpulseRunner(ImpulseRunner):
             print('If your webcam is not responding, try running "tccutil reset Camera" to reset the camera access privileges.')
 
         self.videoCapture = cv2.VideoCapture(videoDeviceId)
+        
         while not self.closed:
             success, img = self.videoCapture.read()
+####
+            seconds = time.mktime(time.gmtime())#轉換整秒數
+              
+            seconds_threshold = seconds#.tm_sec
+            filepath = "/opt/linux-sdk-python/examples/image/Original_image/"
+            if (seconds % 5) == 0:
+                local_time = time.localtime()
+                timeString = time.strftime("%Y_%m_%d_%H_%M_%S_", local_time)
+                img_test = img
+                i = 1
+                
+                img_pad = "Original_image/"+str(timeString) +".jpg"
+                if os.path.isfile(img_pad) == True:
+                    #cv2.imwrite("Original_image/"+timeString+"NG.jpg",img_test)
+                    print #("YA" )
+                else:
+                    #print ("NO YA")
+                    cv2.imwrite(img_pad, img_test)
+                i = i + 1
+            #print("img_test",i)
+####
             if success:
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                 features, cropped = self.get_features_from_image(img)
 
                 res = self.classify(features)
                 yield res, cropped
-
+        return img_test
     # This expects images in RGB format (not BGR)
     def get_features_from_image(self, img, crop_direction_x='center', crop_direction_y='center'):
         features = []
-
+        img_test2 = img
+        cv2.imwrite("/opt/test2.jpg", img)
+        
+        print ("cv2.imwrite",cv2.imwrite("/opt/test2.jpg", img))
         EI_CLASSIFIER_INPUT_WIDTH = self.dim[0]
         EI_CLASSIFIER_INPUT_HEIGHT = self.dim[1]
 
