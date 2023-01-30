@@ -232,8 +232,8 @@ def main(argv):
 
                     #n =  1
                     #print ("ififififn",n)
-                else:
-                    print 
+                #else:
+                #    print 
 
 
 
