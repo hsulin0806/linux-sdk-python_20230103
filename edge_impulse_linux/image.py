@@ -94,7 +94,7 @@ class ImageImpulseRunner(ImpulseRunner):
 
                 res = self.classify(features)
                 yield res, cropped
-        return img_test
+        #return img_test
     # This expects images in RGB format (not BGR)
     def get_features_from_image(self, img, crop_direction_x='center', crop_direction_y='center'):
         features = []
